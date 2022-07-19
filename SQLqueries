@@ -1,0 +1,141 @@
+Select *
+From EmployeeDeptInfo
+
+Select *
+From EmployeeOvertime
+
+Select Count(EMPLID)
+From EmployeeDeptInfo
+
+Select Count(Distinct EMPLID)
+From EmployeeOvertime
+
+--Total overtime 2021
+Select SUM(Quantity) as Quantity
+From EmployeeOvertime
+
+--Sum of Overtime by EmployeeID
+Select EMPLID, SUM(Quantity) as Quantity
+From EmployeeOvertime
+Group by EMPLID
+Order By Quantity desc
+
+--Count for overtime by employee ID
+Select Count(EmployeeOvertime.Emplid) as OvertimeCount, EmployeeOvertime.Emplid, EmployeeDeptInfo.Job_family, 
+EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Group by EmployeeOvertime.Emplid, EmployeeDeptInfo.Job_family, EmployeeDeptInfo.Deptname
+Order by OvertimeCount desc
+
+--Overtime by Sex
+Select SUM(Quantity) as Quantity, Sex
+From EmployeeOvertime
+Group by Sex
+
+--Overtime by position - Male
+Select Top 10 EmployeeDeptInfo.Job_family, SUM(EmployeeOvertime.Quantity) as Quantity
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeOvertime.Sex = 'M'
+Group by EmployeeDeptInfo.Job_family
+Order by Quantity desc
+
+--Overtime by position - Female
+Select Top 10 EmployeeDeptInfo.Job_family, SUM(EmployeeOvertime.Quantity) as Quantity
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeOvertime.Sex = 'F'
+Group by EmployeeDeptInfo.Job_family
+Order by Quantity desc
+
+--Overtime by Month
+Select SUM(Quantity) as Quantity, Month(Date) as Month
+From EmployeeOvertime
+Group by Month(Date)
+Order by Month(Date)
+
+--Overtime month of 10/2021 by department MOST overtime
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where MONTH(EmployeeOvertime.Date) = 10
+Group by EmployeeDeptInfo.Deptname
+Order by Quantity desc
+
+--Overtime month of 08/2021 by department LEAST overtime
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where MONTH(EmployeeOvertime.Date) = 08
+Group by EmployeeDeptInfo.Deptname
+Order by Quantity desc
+
+--Overtime by Shift
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Shift
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Group by EmployeeDeptInfo.Shift
+
+--Overtime by Day Shift
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Job_family
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeDeptInfo.Shift = 'Day'
+Group by EmployeeDeptInfo.Job_family
+Order by Quantity desc
+
+--Overtime by Night Shift
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Job_family
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeDeptInfo.Shift = 'Day'
+Group by EmployeeDeptInfo.Job_family
+Order by Quantity desc
+
+--Overtime by Department
+Select Top 10 EmployeeDeptInfo.Deptname, SUM(EmployeeOvertime.Quantity) as Quantity
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Group by EmployeeDeptInfo.DeptName
+Order by Quantity desc
+
+--Overtime by Job_Family
+Select Top 10 EmployeeDeptInfo.Job_family, SUM(EmployeeOvertime.Quantity) as Quantity 
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Group by EmployeeDeptInfo.Job_family
+Order by Quantity desc
+
+--Overtime by Job_Family and Department
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Job_family, 
+EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Group by EmployeeDeptInfo.Job_family, EmployeeDeptInfo.Deptname
+Order by Quantity desc
+
+--APS Department Overtime 2021
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Job_family, 
+EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeDeptInfo.Deptname = 'APS'
+Group by EmployeeDeptInfo.Job_family, EmployeeDeptInfo.Deptname
+Order by Quantity desc
+
+--SS Department Overtime 2021
+Select SUM(EmployeeOvertime.Quantity) as Quantity, EmployeeDeptInfo.Job_family, 
+EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeDeptInfo.Deptname = 'SS'
+Group by EmployeeDeptInfo.Job_family, EmployeeDeptInfo.Deptname
+Order by Quantity desc
+
+--Average Overtime - PNA
+Select AVG(EmployeeOvertime.Quantity) as AvgOvertime, EmployeeDeptInfo.Deptname
+From EmployeeOvertime
+Left JOIN EmployeeDeptInfo on EmployeeOvertime.EMPLID = EmployeeDeptInfo.EMPLID
+Where EmployeeDeptInfo.Job_family = 'PNA'
+Group by EmployeeDeptInfo.Deptname
